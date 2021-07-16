@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "AUTH_USER_DETAILS")
 @Entity
@@ -42,6 +43,45 @@ public class User implements UserDetails {
 
     @Column(name = "enabled")
     private boolean  enabled;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "AUTH_USER_AUTHORITY", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
+    private List<Authority> authorityList;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorityList;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 
     public long getId() {
         return id;
@@ -111,42 +151,12 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public List<Authority> getAuthorityList() {
+        return authorityList;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
+    public void setAuthorityList(List<Authority> authorityList) {
+        this.authorityList = authorityList;
     }
 }
+
