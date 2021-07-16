@@ -18,9 +18,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         super.configure(auth);
-    }
+    } 
 
     protected void configure(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.authorizeRequests().anyRequest().permitAll();
+        //httpSecurity.authorizeRequests().anyRequest().permitAll(); will show an error page if there is no controller
+        // lo login and then have access to the main welcome page :
+        httpSecurity.authorizeRequests().anyRequest().authenticated();
+        httpSecurity.formLogin();
+
     }
 }
